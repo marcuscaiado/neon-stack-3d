@@ -6,6 +6,7 @@
   <title>Neon Stack Harmony 3D 🌌</title>
   <meta name="description" content="Zen 3D block slicing & tower stacking game with soothing synthwave chords and glowing neon aesthetics.">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="arcade-leaderboard.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; touch-action: manipulation; user-select: none; }
     body {
@@ -479,7 +480,17 @@
       localStorage.setItem('neon_stack_best', bestScore);
       finalScoreEl.textContent = score;
       bestScoreEl.textContent = bestScore;
-      modal.style.display = 'flex';
+
+      if (window.ArcadeLeaderboard) {
+        window.ArcadeLeaderboard.show({
+          gameId: 'neon-stack-3d',
+          score: score,
+          scoreUnit: 'SLABS',
+          onRestart: resetGame
+        });
+      } else {
+        modal.style.display = 'flex';
+      }
     }
 
     function resetGame() {
