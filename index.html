@@ -480,17 +480,13 @@
       localStorage.setItem('neon_stack_best', bestScore);
       finalScoreEl.textContent = score;
       bestScoreEl.textContent = bestScore;
+      modal.style.display = 'flex';
 
-      if (window.ArcadeLeaderboard) {
-        window.ArcadeLeaderboard.show({
-          gameId: 'neon-stack-3d',
-          score: score,
-          scoreUnit: 'SLABS',
-          onRestart: resetGame
-        });
-      } else {
-        modal.style.display = 'flex';
-      }
+      try {
+        if (window.ArcadeLeaderboard) {
+          window.ArcadeLeaderboard.submitScore('neon-stack-3d', score);
+        }
+      } catch(e){}
     }
 
     function resetGame() {
