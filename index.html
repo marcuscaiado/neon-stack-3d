@@ -374,14 +374,35 @@
       const dimension = currentDirection === 'x' ? activeLayer.width : activeLayer.depth;
       const absDelta = Math.abs(delta);
 
-      // 1. Check for Perfect Placement (within generous tolerance for satisfaction)
-      const PERFECT_TOLERANCE = 0.35;
+      // 1. Check for Perfect Placement (generous 0.42 tolerance)
+      const PERFECT_TOLERANCE = 0.42;
       if (absDelta < PERFECT_TOLERANCE) {
         combo++;
         activeLayer.mesh.position.x = top.x;
         activeLayer.mesh.position.z = top.z;
         playChordNote(combo);
-        showComboText(`PERFECT! x${combo} ✨`);
+
+        // Classic Arcade Reward: Recover block size on 3+ perfect combo streak
+        if (combo >= 3 && (activeLayer.width < INITIAL_WIDTH || activeLayer.depth < INITIAL_DEPTH)) {
+          const newW = Math.min(INITIAL_WIDTH, activeLayer.width + 1.2);
+          const newD = Math.min(INITIAL_DEPTH, activeLayer.depth + 1.2);
+          
+          scene.remove(activeLayer.mesh);
+          activeLayer.mesh.geometry.dispose();
+          const expandGeo = new THREE.BoxGeometry(newW, BOX_HEIGHT, newD);
+          const expandMesh = new THREE.Mesh(expandGeo, new THREE.MeshLambertMaterial({ color: getColor(stack.length) }));
+          expandMesh.position.set(top.x, activeLayer.mesh.position.y, top.z);
+          expandMesh.castShadow = true;
+          expandMesh.receiveShadow = true;
+          scene.add(expandMesh);
+
+          activeLayer.mesh = expandMesh;
+          activeLayer.width = newW;
+          activeLayer.depth = newD;
+          showComboText(`SIZE EXPANDED! x${combo} 🌟`);
+        } else {
+          showComboText(`PERFECT! x${combo} ✨`);
+        }
       } else {
         combo = 0;
         showComboText('');
