@@ -380,7 +380,12 @@
         combo++;
         activeLayer.mesh.position.x = top.x;
         activeLayer.mesh.position.z = top.z;
-        playChordNote(combo);
+        if (window.DopamineSynth) window.DopamineSynth.playCombo(combo);
+        else playChordNote(combo);
+        if (window.DopamineJuice) {
+          window.DopamineJuice.spawnScore(window.innerWidth / 2, window.innerHeight * 0.42, `PERFECT x${combo} 🌌`, combo);
+          if (combo % 3 === 0) window.DopamineJuice.explodeConfetti(window.innerWidth / 2, window.innerHeight * 0.42, 35);
+        }
 
         // Classic Arcade Reward: Recover block size on 3+ perfect combo streak
         if (combo >= 3 && (activeLayer.width < INITIAL_WIDTH || activeLayer.depth < INITIAL_DEPTH)) {
@@ -406,7 +411,8 @@
       } else {
         combo = 0;
         showComboText('');
-        playChordNote(0);
+        if (window.DopamineSynth) window.DopamineSynth.playTap(0.2, 1.0);
+        else playChordNote(0);
 
         // 2. Check for Complete Miss (Game Over)
         if (absDelta >= dimension) {
@@ -487,6 +493,8 @@
 
     function endGame() {
       isGameOver = true;
+      if (window.DopamineSynth) window.DopamineSynth.playWin();
+      if (window.DopamineJuice) window.DopamineJuice.explodeConfetti(window.innerWidth / 2, window.innerHeight * 0.4, 65);
       playMissSound();
       if (activeLayer) {
         overhangs.push({
