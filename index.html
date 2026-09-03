@@ -6,6 +6,7 @@
   <title>Neon Stack Harmony 3D 🌌</title>
   <meta name="description" content="Zen 3D block slicing & tower stacking game with soothing synthwave chords and glowing neon aesthetics.">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="arcade-sound-engine.js"></script>
   <script src="arcade-leaderboard.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; touch-action: manipulation; user-select: none; }
@@ -205,6 +206,10 @@
     // Pentatonic scale (C, D, E, G, A across octaves) for soothing musical feedback
     const scale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
     function playChordNote(combo) {
+      if (window.arcadeAudio) {
+        window.arcadeAudio.playCollectStreak(combo);
+        return;
+      }
       try {
         const ctx = getAudio();
         const noteIndex = combo % scale.length;
@@ -223,11 +228,15 @@
     }
 
     function playMissSound() {
+      if (window.arcadeAudio) {
+        window.arcadeAudio.playSoftThud(1.3);
+        return;
+      }
       try {
         const ctx = getAudio();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.type = 'sawtooth';
+        osc.type = 'triangle';
         osc.frequency.setValueAtTime(140, ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.4);
         gain.gain.setValueAtTime(0.2, ctx.currentTime);
