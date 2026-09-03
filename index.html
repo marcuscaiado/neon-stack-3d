@@ -166,11 +166,20 @@
       .score-val { font-size: 34px; }
       .arcade-nav { font-size: 11px; padding: 6px 12px; }
     }
-  </style>
+  
+/* Universal Mobile Touch & Top Navigation Safeguards */
+.arcade-nav, .arcade-link, .nav-btn-arcade, .arcade-corner-btn, .arcade-btn, .btn-arcade, a[href*="arcad"], #modal a, #modal button, .modal a, .modal button, #game-over-modal a, #game-over-modal button {
+  pointer-events: auto !important;
+  touch-action: auto !important;
+  cursor: pointer !important;
+  -webkit-tap-highlight-color: rgba(0, 245, 255, 0.4);
+}
+
+</style>
 </head>
 <body>
   <div id="game-container">
-    <a href="https://marcuscaiado.github.io/marcus-arcade/" class="arcade-nav">🕹️ Arcade Hub</a>
+    <a href="https://marcuscaiado.github.io/marcus-arcade/" class="arcade-nav" target="_top" onclick="if(window.top){window.top.location.href=this.href;return false;}" ontouchend="if(window.top){window.top.location.href=this.href;return false;}">🕹️ Arcade Hub</a>
     
     <div class="hud">
       <div class="score-title">TOWER HEIGHT</div>
@@ -188,7 +197,7 @@
       </div>
       <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
         <button class="btn" id="restart-btn">STACK AGAIN 🔄</button>
-        <a href="https://marcuscaiado.github.io/marcus-arcade/" class="btn" style="background:#151833; color:#00f5ff; border:1px solid #00f5ff;">ARCADE HUB 🕹️</a>
+        <a href="https://marcuscaiado.github.io/marcus-arcade/" class="btn" style="background:#151833; color:#00f5ff; border:1px solid #00f5ff;" target="_top" onclick="if(window.top){window.top.location.href=this.href;return false;}" ontouchend="if(window.top){window.top.location.href=this.href;return false;}">ARCADE HUB 🕹️</a>
       </div>
     </div>
   </div>
